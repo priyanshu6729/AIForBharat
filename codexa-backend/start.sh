@@ -1,4 +1,3 @@
-cat > codexa-backend/start.sh << 'EOF'
 #!/bin/bash
 # Start script that handles PORT variable properly
 
@@ -17,6 +16,3 @@ fi
 
 # Start the application
 exec uvicorn app.main:app --host 0.0.0.0 --port "$PORT"
-EOF
-
-chmod +x codexa-backend/start.sh
