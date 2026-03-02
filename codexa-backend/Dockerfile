@@ -8,9 +8,12 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
+# Copy requirements
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Upgrade pip and install dependencies
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
@@ -18,8 +21,12 @@ COPY . .
 # Make start script executable
 RUN chmod +x start.sh
 
-# Expose port
+# Create non-root user
+RUN useradd -m -u 1000 codexa && chown -R codexa:codexa /app
+
+USER codexa
+
 EXPOSE 8000
 
-# Run the start script
+# Use the start script
 CMD ["./start.sh"]

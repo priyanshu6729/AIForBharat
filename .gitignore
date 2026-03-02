@@ -24,7 +24,7 @@ wheels/
 .installed.cfg
 *.egg
 
-# Environment
+# Environment - only ignore actual .env files, not .env.example
 .env
 .env.local
 .env.*.local
@@ -52,3 +52,20 @@ logs/
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+# Don't ignore these important folders
+!scripts/
+!frontend/
+!tests/
+!docs/
+!services/
+!libs/
+!lambda/
+!infra/
+!infrastructure/
+!pgvector/
