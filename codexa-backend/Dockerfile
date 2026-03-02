@@ -26,7 +26,10 @@ RUN useradd -m -u 1000 codexa && chown -R codexa:codexa /app
 
 USER codexa
 
+# Set default PORT
+ENV PORT=8000
+
 EXPOSE 8000
 
-# Use the start script
-CMD ["./start.sh"]
+# Use shell form to ensure variable expansion
+CMD sh -c "uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"
