@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codexa · Visualize</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="visualize">
+    <div class="bg" aria-hidden="true"></div>
+    <header class="header">
+      <div class="brand">
+        <strong>Codexa</strong>
+        <span>Visualize Flow</span>
+      </div>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="analyze.html">Analyze</a>
+        <a href="visualize.html" class="active">Visualize</a>
+        <a href="lesson.html">Lesson</a>
+        <a href="guidance.html">Guidance</a>
+        <a href="execute.html">Execute</a>
+        <a href="sessions.html">Sessions</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </header>
+
+    <section class="section split">
+      <div class="form-card">
+        <h2>Graph Builder</h2>
+        <button class="button" id="visualizeBtn">Visualize AST</button>
+        <div class="output" id="graphOutput">No graph yet.</div>
+        <div class="output" id="statusOutput">Status messages appear here.</div>
+      </div>
+
+      <div class="form-card">
+        <h2>Graph Preview</h2>
+        <div class="graph-preview" id="graphPreview">No graph yet.</div>
+        <div class="output" id="graphMeta">No graph metadata.</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>Tip: Use smaller modules for clearer visuals.</div>
+      <div>Codexa · Visualize</div>
+    </footer>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

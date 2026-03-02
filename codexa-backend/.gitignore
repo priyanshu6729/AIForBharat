@@ -1,0 +1,117 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+.env.local
+
+# Environment Variables (CRITICAL - NEVER COMMIT)
+.env
+.env.production
+.env.*.local
+*.env
+
+# Database
+*.db
+*.sqlite3
+*.db-journal
+local_storage/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.hypothesis/
+*.cover
+.cache
+nosetests.xml
+coverage.xml
+*.log
+
+# Documentation
+docs/_build/
+site/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Models (large files)
+models/*.gguf
+models/*.bin
+*.gguf
+*.bin
+
+# AWS
+.aws/
+*.pem
+*.key
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+.#*
+\#*\#
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Alembic
+alembic/versions/__pycache__/
+
+# Ngrok
+ngrok
+ngrok.exe
+
+# Local data
+local_storage/
+uploads/
+downloads/
+temp/

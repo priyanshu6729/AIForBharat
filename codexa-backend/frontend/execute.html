@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codexa · Execute</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="execute">
+    <div class="bg" aria-hidden="true"></div>
+    <header class="header">
+      <div class="brand">
+        <strong>Codexa</strong>
+        <span>Run Code Safely</span>
+      </div>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="analyze.html">Analyze</a>
+        <a href="visualize.html">Visualize</a>
+        <a href="guidance.html">Guidance</a>
+        <a href="execute.html" class="active">Execute</a>
+        <a href="lesson.html">Lesson</a>
+        <a href="sessions.html">Sessions</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </header>
+
+    <section class="section split">
+      <div class="form-card">
+        <h2>Execution</h2>
+        <label>
+          Language
+          <select id="language">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+          </select>
+        </label>
+        <label>
+          Code
+          <textarea id="code" rows="8" placeholder="Paste code here..."></textarea>
+        </label>
+        <button class="button" id="executeBtn">Run Code</button>
+      </div>
+
+      <div class="form-card">
+        <h2>Execution Output</h2>
+        <div class="output" id="executionOutput">No execution yet.</div>
+        <div class="output" id="statusOutput">Status messages appear here.</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>Tip: Execution time limit is 5 seconds.</div>
+      <div>Codexa · Execute</div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

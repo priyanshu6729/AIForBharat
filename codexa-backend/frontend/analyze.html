@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codexa · Analyze</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="analyze">
+    <div class="bg" aria-hidden="true"></div>
+    <header class="header">
+      <div class="brand">
+        <strong>Codexa</strong>
+        <span>Analyze Code</span>
+      </div>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="analyze.html" class="active">Analyze</a>
+        <a href="lesson.html">Lesson</a>
+        <a href="visualize.html">Visualize</a>
+        <a href="guidance.html">Guidance</a>
+        <a href="execute.html">Execute</a>
+        <a href="sessions.html">Sessions</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </header>
+
+    <section class="section split">
+      <div class="form-card">
+        <h2>Code Input</h2>
+        <label>
+          Language
+          <select id="language">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+          </select>
+        </label>
+        <label>
+          Code
+          <textarea id="code" rows="10" placeholder="Paste code here..."></textarea>
+        </label>
+        <button class="button" id="analyzeBtn">Analyze</button>
+      </div>
+
+      <div class="form-card">
+        <h2>AST Output</h2>
+        <div class="output" id="astOutput">No AST yet.</div>
+        <div class="hero-actions">
+          <a class="button ghost" href="visualize.html">Send to Visualize</a>
+          <a class="button ghost" href="guidance.html">Ask for Guidance</a>
+        </div>
+        <div class="output" id="statusOutput">Status messages appear here.</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>Tip: Start with a small function for clearer graphs.</div>
+      <div>Codexa · Analyze</div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codexa · Student Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="dashboard">
+    <div class="bg" aria-hidden="true"></div>
+    <header class="header">
+      <div class="brand">
+        <strong>Codexa</strong>
+        <span>Student Dashboard</span>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="analyze.html">Analyze</a>
+        <a href="visualize.html">Visualize</a>
+        <a href="guidance.html">Guidance</a>
+        <a href="execute.html">Execute</a>
+        <a href="sessions.html">Sessions</a>
+        <a href="lesson.html">Lesson</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-card">
+        <h1>Pick a learning task</h1>
+        <p>Each page focuses on one step in the learning loop.</p>
+        <div class="hero-actions">
+          <a class="button" href="analyze.html">Analyze Code</a>
+          <a class="button secondary" href="visualize.html">Visualize Flow</a>
+          <a class="button ghost" href="lesson.html">Guided Lesson</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <h3>Progress Tips</h3>
+        <ul class="card" style="animation-delay: 0.1s">
+          <li>Start with AST analysis to see structure.</li>
+          <li>Use guidance to self-correct instead of guessing.</li>
+          <li>Save sessions to track improvement.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>Learning Modules</h2>
+        <p>Step-by-step flow for students.</p>
+      </div>
+      <div class="grid" id="dashboardModules"></div>
+    </section>
+
+    <footer class="footer">
+      <div>Codexa · Learn in steps</div>
+      <div>Keep your sessions organized</div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

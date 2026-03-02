@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codexa · Guidance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="guidance">
+    <div class="bg" aria-hidden="true"></div>
+    <header class="header">
+      <div class="brand">
+        <strong>Codexa</strong>
+        <span>Socratic Guidance</span>
+      </div>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="analyze.html">Analyze</a>
+        <a href="visualize.html">Visualize</a>
+        <a href="guidance.html" class="active">Guidance</a>
+        <a href="lesson.html">Lesson</a>
+        <a href="execute.html">Execute</a>
+        <a href="sessions.html">Sessions</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </header>
+
+    <section class="section split">
+      <div class="form-card">
+        <h2>Ask a Question</h2>
+        <label>
+          Question
+          <textarea id="question" rows="4" placeholder="Why does this loop exist?"></textarea>
+        </label>
+        <button class="button" id="guidanceBtn">Get Guidance</button>
+      </div>
+
+      <div class="form-card">
+        <h2>Guidance Output</h2>
+        <div class="output" id="guidanceOutput">No guidance yet.</div>
+        <div class="output" id="guidanceLog">No chat log yet.</div>
+        <div class="output" id="statusOutput">Status messages appear here.</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>Tip: Ask "What is the next step?" to practice reasoning.</div>
+      <div>Codexa · Guidance</div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

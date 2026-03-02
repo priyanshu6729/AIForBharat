@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codexa · Sessions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="sessions">
+    <div class="bg" aria-hidden="true"></div>
+    <header class="header">
+      <div class="brand">
+        <strong>Codexa</strong>
+        <span>Saved Sessions</span>
+      </div>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="analyze.html">Analyze</a>
+        <a href="visualize.html">Visualize</a>
+        <a href="guidance.html">Guidance</a>
+        <a href="execute.html">Execute</a>
+        <a href="sessions.html" class="active">Sessions</a>
+        <a href="lesson.html">Lesson</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </header>
+
+    <section class="section split">
+      <div class="form-card">
+        <h2>Save Session</h2>
+        <button class="button" id="saveSessionBtn">Save Session</button>
+      </div>
+
+      <div class="form-card">
+        <h2>Load Session</h2>
+        <button class="button secondary" id="loadSessionBtn">Refresh List</button>
+        <div class="output" id="sessionList">No sessions yet.</div>
+        <div class="output" id="sessionOutput">No session loaded.</div>
+        <div class="output" id="statusOutput">Status messages appear here.</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>Tip: Save after guidance to keep your learning trail.</div>
+      <div>Codexa · Sessions</div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

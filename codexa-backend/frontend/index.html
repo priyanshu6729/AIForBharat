@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codexa · Learn With Code</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="home">
+    <div class="bg" aria-hidden="true"></div>
+    <header class="header">
+      <div class="brand">
+        <strong>Codexa</strong>
+        <span>Socratic Pair Programmer</span>
+      </div>
+      <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="analyze.html">Analyze</a>
+        <a href="visualize.html">Visualize</a>
+        <a href="guidance.html">Guidance</a>
+        <a href="execute.html">Execute</a>
+        <a href="sessions.html">Sessions</a>
+        <a href="lesson.html">Lesson</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-card">
+        <span class="badge">Learn by discovery</span>
+        <h1>Turn code into guided learning journeys.</h1>
+        <p>
+          Codexa analyzes Python and JavaScript, builds visual flow graphs, and teaches
+          with Socratic questions instead of direct answers.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="login.html">Get Started</a>
+          <a class="button secondary" href="dashboard.html">Open Dashboard</a>
+          <a class="button ghost" href="lesson.html">Guided Lesson</a>
+          <a class="button ghost" href="architecture.html">Architecture</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <h3>Learning Loop</h3>
+        <ul class="card" style="animation-delay: 0.1s">
+          <li>Analyze → Visualize → Ask → Reflect</li>
+          <li>Run code safely and compare outcomes</li>
+          <li>Save sessions for later review</li>
+        </ul>
+        <p class="muted">Ready for students, workshops, and code reviews.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>What Students Can Do</h2>
+        <p>Everything is split into simple, focused pages.</p>
+      </div>
+      <div class="grid" id="featureGrid"></div>
+    </section>
+
+    <footer class="footer">
+      <div>Codexa · Visual learning for code</div>
+      <div>Backend optimized for AWS free tier</div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

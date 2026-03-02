@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codexa · Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="login">
+    <div class="bg" aria-hidden="true"></div>
+    <header class="header">
+      <div class="brand">
+        <strong>Codexa</strong>
+        <span>Login & Access</span>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="login.html" class="active">Login</a>
+        <a href="lesson.html">Lesson</a>
+      </nav>
+    </header>
+
+    <section class="section split">
+      <div class="form-card">
+        <h2>Create Account</h2>
+        <label>
+          Email
+          <input type="email" id="registerEmail" placeholder="you@example.com" />
+        </label>
+        <label>
+          Password
+          <input type="password" id="registerPassword" placeholder="••••••••" />
+        </label>
+        <button class="button" id="registerBtn">Register</button>
+        <p class="muted">Check your email to confirm the Cognito sign-up if required.</p>
+      </div>
+
+      <div class="form-card">
+        <h2>Sign In</h2>
+        <label>
+          Email
+          <input type="email" id="loginEmail" placeholder="you@example.com" />
+        </label>
+        <label>
+          Password
+          <input type="password" id="loginPassword" placeholder="••••••••" />
+        </label>
+        <button class="button secondary" id="loginBtn">Login</button>
+        <div class="hero-actions">
+          <button class="button ghost" id="meBtn">Check Session</button>
+          <button class="button ghost" id="clearTokenBtn">Log Out</button>
+        </div>
+        <div class="output" id="authOutput">Ready.</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>Need help? Ask your instructor for the Cognito confirmation flow.</div>
+      <div>Codexa · Authentication</div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
