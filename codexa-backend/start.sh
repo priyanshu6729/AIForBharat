@@ -14,5 +14,5 @@ if [ "$RUN_MIGRATIONS" = "true" ]; then
     alembic upgrade head
 fi
 
-# Start the application
+# Start the application with proper port expansion
 exec uvicorn app.main:app --host 0.0.0.0 --port "$PORT"
