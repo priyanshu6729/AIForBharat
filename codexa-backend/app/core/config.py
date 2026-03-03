@@ -1,7 +1,7 @@
 from pydantic_settings import BaseSettings
 from pydantic import ConfigDict, Field, AliasChoices, field_validator
 import secrets
-
+import os
 
 class Settings(BaseSettings):
     model_config = ConfigDict(
@@ -11,11 +11,16 @@ class Settings(BaseSettings):
         extra="ignore",
     )
     
-    env: str = "local"
+    env: str = Field(default="development", validation_alias=AliasChoices("ENV", "ENVIRONMENT"))
     log_level: str = "INFO"
     frontend_url: str = "http://localhost:3000"
     secret_key: str = "dev-secret-key-change-in-production"
     allowed_hosts: str = "localhost,127.0.0.1"
+    
+    # Railway-specific
+    railway_environment: str | None = Field(default=None, validation_alias="RAILWAY_ENVIRONMENT")
+    railway_service_name: str | None = Field(default=None, validation_alias="RAILWAY_SERVICE_NAME")
+    port: int = Field(default=8000, validation_alias="PORT")
     
     # Rate limiting
     rate_limit_per_minute: int = 100
@@ -24,7 +29,9 @@ class Settings(BaseSettings):
     # Monitoring
     sentry_dsn: str | None = None
     
-    database_url: str
+    # Database - Railway provides DATABASE_URL
+    database_url: str = Field(validation_alias=AliasChoices("DATABASE_URL", "DATABASE_PRIVATE_URL"))
+    
     s3_bucket: str
     s3_prefix: str = "prototype"
     aws_region: str = Field(
@@ -62,6 +69,14 @@ class Settings(BaseSettings):
         validation_alias=AliasChoices("LLM_MODEL_THREADS", "MODEL_THREADS"),
     )
     
+    @field_validator("database_url")
+    @classmethod
+    def fix_railway_database_url(cls, v: str) -> str:
+        """Fix Railway's postgres:// to postgresql+psycopg2://"""
+        if v.startswith("postgres://"):
+            v = v.replace("postgres://", "postgresql+psycopg2://", 1)
+        return v
+    
     @field_validator("secret_key")
     @classmethod
     def validate_secret_key(cls, v: str, info) -> str:
@@ -72,12 +87,24 @@ class Settings(BaseSettings):
             raise ValueError("SECRET_KEY must be at least 32 characters in production")
         return v
     
+    @field_validator("env")
+    @classmethod
+    def detect_railway(cls, v: str, info) -> str:
+        """Auto-detect Railway environment"""
+        # If RAILWAY_ENVIRONMENT is set, use it
+        railway_env = info.data.get("railway_environment")
+        if railway_env:
+            return "production" if railway_env == "production" else "development"
+        return v
+    
     @field_validator("frontend_url")
     @classmethod
     def validate_frontend_url(cls, v: str, info) -> str:
         """Ensure frontend URL is HTTPS in production"""
-        if info.data.get("env") == "production" and not v.startswith("https://"):
-            raise ValueError("FRONTEND_URL must use HTTPS in production")
+        env = info.data.get("env", "development")
+        if env == "production" and not v.startswith(("https://", "http://localhost")):
+            if not v.startswith("http://"):
+                raise ValueError("FRONTEND_URL must use HTTPS in production")
         return v
     
     @property
@@ -85,13 +112,27 @@ class Settings(BaseSettings):
         return self.env == "production"
     
     @property
+    def is_railway(self) -> bool:
+        """Check if running on Railway"""
+        return self.railway_environment is not None
+    
+    @property
     def allowed_origins(self) -> list[str]:
         """Get CORS allowed origins"""
-        if self.env == "local":
+        if self.env in ["local", "development"]:
             return ["*"]
-        return [self.frontend_url] + [
+        
+        origins = [self.frontend_url]
+        
+        # Add Railway preview URLs
+        if self.is_railway:
+            origins.append("https://*.railway.app")
+        
+        # Add configured hosts
+        origins.extend([
             f"https://{host}" for host in self.allowed_hosts.split(",")
-        ]
-
+        ])
+        
+        return origins
 
 settings = Settings()

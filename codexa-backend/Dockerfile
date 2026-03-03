@@ -8,28 +8,21 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements
+# Copy requirements first for better caching
 COPY requirements.txt .
-
-# Upgrade pip and install dependencies
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
 
+# Create directory for models (optional)
+RUN mkdir -p models
+
 # Make start script executable
 RUN chmod +x start.sh
 
-# Create non-root user
-RUN useradd -m -u 1000 codexa && chown -R codexa:codexa /app
-
-USER codexa
-
-# Set default PORT
-ENV PORT=8000
-
+# Expose port (Railway will override with $PORT)
 EXPOSE 8000
 
-# Use shell form to ensure variable expansion
-CMD sh -c "uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"
+# Use start script that properly handles PORT
+CMD ["sh", "start.sh"]
