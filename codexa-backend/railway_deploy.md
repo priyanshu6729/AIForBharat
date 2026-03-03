@@ -1,301 +1,225 @@
-# Railway Deployment Guide
+# 🚂 Railway Deployment Guide for Codexa Backend
 
-## 🚂 Quick Deploy to Railway
+## Prerequisites
 
-### Prerequisites
+- Railway account (https://railway.app)
+- GitHub repository connected to Railway
+- AWS credentials (for S3, Bedrock, Cognito)
 
-1. Railway account: https://railway.app
-2. GitHub repository with your code
-3. PostgreSQL database URL
-4. AWS credentials
+## Step 1: Create Railway Project
 
-### Method 1: Deploy from GitHub (Recommended)
+1. Go to Railway dashboard
+2. Click "New Project"
+3. Select "Deploy from GitHub repo"
+4. Choose your `codexa` repository
+5. Railway will auto-detect the configuration from `railway.toml`
 
-1. **Push code to GitHub**
+## Step 2: Add PostgreSQL Database
+
+1. In your Railway project, click "New"
+2. Select "Database" → "PostgreSQL"
+3. Railway will automatically create a database and set `DATABASE_URL`
+4. The `DATABASE_URL` is automatically injected into your backend service
+
+## Step 3: Configure Environment Variables
+
+Go to your backend service → Variables tab and add:
+
+### Required Variables
 
 ```bash
-git add .
-git commit -m "Prepare for Railway deployment"
-git push origin main
+ENV=production
+FRONTEND_URL=https://your-frontend.railway.app
+SECRET_KEY=<generate-with-openssl-rand-hex-32>
+ALLOWED_HOSTS=your-backend.railway.app
 ```
 
-2. **Create Railway Project**
-
-   - Go to https://railway.app
-   - Click "New Project"
-   - Select "Deploy from GitHub repo"
-   - Choose your repository
-   - Select `codexa-backend` directory if monorepo
-
-3. **Add PostgreSQL Database**
-
-   - In your project, click "New"
-   - Select "Database" → "PostgreSQL"
-   - Railway will create and connect it automatically
-
-4. **Configure Environment Variables**
-
-   Click on your service → Variables tab:
-
-   ```env
-   ENV=production
-   LOG_LEVEL=INFO
-
-   # Database (Railway provides this automatically as DATABASE_URL)
-   # No need to set if using Railway PostgreSQL
-
-   # Frontend
-   FRONTEND_URL=https://your-frontend-domain.com
-
-   # AWS
-   AWS_ACCESS_KEY_ID=your-aws-access-key
-   AWS_SECRET_ACCESS_KEY=your-aws-secret-key
-   AWS_REGION=us-east-1
-   S3_BUCKET=codexa-2026
-   S3_PREFIX=prototype
-
-   # Bedrock
-   BEDROCK_REGION=us-east-1
-   BEDROCK_MODEL_ID=amazon.nova-micro-v1:0
-   NOVA_MODEL_ID=amazon.nova-micro-v1:0
-   TITAN_EMBEDDING_MODEL_ID=amazon.titan-embed-text-v1
-
-   # Lambda
-   LAMBDA_FUNCTION_NAME=codexa-analysis
-   LAMBDA_MODE=local
-
-   # Cognito
-   COGNITO_USER_POOL_ID=us-east-1_dNGB9UtRx
-   COGNITO_CLIENT_ID=1fu0qbokifrchf0jsa5qf9e6c6
-   COGNITO_REGION=us-east-1
-
-   # Security
-   SECRET_KEY=your-generated-secret-key-here
-   ALLOWED_HOSTS=your-domain.com,*.railway.app
-
-   # Rate Limiting
-   RATE_LIMIT_PER_MINUTE=60
-   RATE_LIMIT_PER_HOUR=1000
-   ```
-
-5. **Deploy**
-
-   - Railway automatically deploys on push
-   - Monitor deployment in the Deployments tab
-   - Check logs for any errors
-
-6. **Run Migrations** (if needed)
-
-   In the service settings:
-
-   - Settings → Deploy → Start Command:
-     ```bash
-     sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
-     ```
-
-### Method 2: Deploy with Railway CLI
+### AWS Variables
 
 ```bash
-# Install Railway CLI
-npm i -g @railway/cli
-
-# Login
-railway login
-
-# Initialize project (in codexa-backend directory)
-cd codexa-backend
-railway init
-
-# Link to your project
-railway link
-
-# Add PostgreSQL
-railway add --database postgres
-
-# Set environment variables
-railway variables set ENV=production
-railway variables set SECRET_KEY=$(openssl rand -hex 32)
-railway variables set FRONTEND_URL=https://yourdomain.com
-# ... set other variables
-
-# Deploy
-railway up
-
-# View logs
-railway logs
+AWS_ACCESS_KEY_ID=<your-aws-key>
+AWS_SECRET_ACCESS_KEY=<your-aws-secret>
+S3_BUCKET=codexa-2026
+AWS_REGION=us-east-1
 ```
 
-### Verify Deployment
+### Service Variables
 
 ```bash
-# Get your Railway URL
-railway domain
-
-# Test health endpoint
-curl https://your-service.railway.app/health
-
-# Check detailed health
-curl https://your-service.railway.app/health/detailed
+SQS_QUEUE_URL=https://sqs.us-east-1.amazonaws.com/657372247607/codexa-prototype
+BEDROCK_MODEL_ID=amazon.nova-micro-v1:0
+NOVA_MODEL_ID=amazon.nova-micro-v1:0
+TITAN_EMBEDDING_MODEL_ID=amazon.titan-embed-text-v1
+COGNITO_USER_POOL_ID=us-east-1_dNGB9UtRx
+COGNITO_CLIENT_ID=1fu0qbokifrchf0jsa5qf9e6c6
+COGNITO_REGION=us-east-1
+LAMBDA_FUNCTION_NAME=codexa-analysis
+LAMBDA_MODE=remote
 ```
 
-## 🔧 Configuration
-
-### Custom Domain
-
-1. Go to Settings → Networking
-2. Click "Generate Domain" for Railway subdomain
-3. Or add custom domain:
-   - Enter your domain
-   - Add CNAME record: `your-domain.com` → `railway-assigned.railway.app`
-
-### Environment Variables
-
-Required variables:
-
-- `ENV=production`
-- `DATABASE_URL` (auto-set if using Railway PostgreSQL)
-- `SECRET_KEY` (generate with `openssl rand -hex 32`)
-- `COGNITO_USER_POOL_ID`
-- `COGNITO_CLIENT_ID`
-- AWS credentials
-
-Optional variables:
-
-- `SENTRY_DSN` for error tracking
-- `LOG_LEVEL` (default: INFO)
-
-### Start Command
-
-Railway should auto-detect, but you can set manually:
+### Optional Variables
 
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port $PORT
+RUN_MIGRATIONS=true  # Set to run DB migrations on startup
+RATE_LIMIT_PER_MINUTE=100
+RATE_LIMIT_PER_HOUR=2000
+LOG_LEVEL=INFO
+SENTRY_DSN=<optional-sentry-dsn>
 ```
 
-Or with migrations:
+## Step 4: Generate SECRET_KEY
+
+Run locally:
 
 ```bash
-sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+openssl rand -hex 32
 ```
 
-## 🐛 Troubleshooting
+Copy the output and set it as `SECRET_KEY` in Railway.
 
-### Port Error
+## Step 5: Deploy
 
-If you see `'$PORT' is not a valid integer`:
+1. Railway will automatically deploy on git push
+2. Check deployment logs in Railway dashboard
+3. Wait for deployment to complete
 
-1. Update Dockerfile CMD:
-   ```dockerfile
-   CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
-   ```
-2. Or use Procfile (Railway auto-detects):
-   ```
-   web: uvicorn app.main:app --host 0.0.0.0 --port $PORT
-   ```
+## Step 6: Verify Deployment
 
-### Database Connection
+### Check Health Endpoint
 
 ```bash
-# Check DATABASE_URL is set
-railway variables
-
-# Test connection
-railway run python -c "from app.database import engine; engine.connect()"
+curl https://your-backend.railway.app/health
 ```
 
-### Build Failures
+Expected response:
 
-```bash
-# View build logs
-railway logs --deployment
-
-# Common issues:
-# 1. Missing dependencies → Check requirements.txt
-# 2. Build timeout → Increase in Settings → Deploy
-# 3. Memory issues → Upgrade plan or optimize dependencies
+```json
+{
+  "status": "healthy",
+  "environment": "production",
+  "database": "connected"
+}
 ```
 
-### Health Check Failures
-
-1. Verify `/health` endpoint works locally
-2. Check health check path in railway.json
-3. Increase timeout in Settings → Deploy
-
-### Migration Errors
+### Check Detailed Health
 
 ```bash
-# Run migrations manually
+curl https://your-backend.railway.app/health/detailed
+```
+
+## Step 7: Run Database Migrations
+
+If you haven't set `RUN_MIGRATIONS=true`:
+
+1. Go to your service in Railway
+2. Click on the "Deploy" tab
+3. Use Railway CLI or set `RUN_MIGRATIONS=true` and redeploy
+
+Or use Railway CLI:
+
+```bash
 railway run alembic upgrade head
-
-# Or add to start command
-railway settings --start-command "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port \$PORT"
 ```
 
-## 📊 Monitoring
+## Step 8: Update Frontend
+
+Update your frontend's `.env.production` with the Railway backend URL:
+
+```bash
+NEXT_PUBLIC_API_URL=https://your-backend.railway.app
+```
+
+## Common Issues & Solutions
+
+### Issue: PORT Error
+
+**Solution**: Ensure `start.sh` properly handles `$PORT` variable (already fixed in our config)
+
+### Issue: Database Connection Failed
+
+**Solution**:
+
+- Check if PostgreSQL service is running
+- Verify `DATABASE_URL` is set automatically by Railway
+- Check database logs in Railway
+
+### Issue: AWS Credentials Invalid
+
+**Solution**:
+
+- Verify `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are set
+- Check IAM permissions for S3, SQS, Bedrock, and Cognito
+
+### Issue: CORS Errors
+
+**Solution**:
+
+- Ensure `FRONTEND_URL` matches your actual frontend URL
+- Check `ALLOWED_HOSTS` includes your backend domain
+
+## Monitoring
 
 ### View Logs
 
 ```bash
-# Live logs
 railway logs
-
-# Deployment-specific logs
-railway logs --deployment <deployment-id>
 ```
 
-### Metrics
+### View Metrics
 
-- View in Railway dashboard → Metrics
-- CPU, Memory, Network usage
-- Request/response times
+Go to Railway dashboard → Your service → Metrics tab
 
-### Alerts
+### Set Up Alerts
 
-Set up in Settings → Notifications:
+Configure alerts in Railway dashboard for:
 
+- High error rate
+- High memory usage
 - Deployment failures
-- Health check failures
-- Resource limits
 
-## 💰 Cost Optimization
+## Rollback
 
-1. **Hobby Plan**: $5/month
+If deployment fails:
 
-   - 500 hours/month
-   - $0.000463/GB-hour RAM
-   - Good for development
+1. Go to Railway dashboard
+2. Click on "Deployments"
+3. Select a previous successful deployment
+4. Click "Redeploy"
 
-2. **Production**:
-   - Use sleep on inactivity
-   - Optimize Docker image size
-   - Use connection pooling for database
+## Custom Domain (Optional)
 
-## 🔄 CI/CD
+1. Go to your service settings
+2. Click "Networking"
+3. Add custom domain
+4. Update DNS records as instructed
+5. Update `ALLOWED_HOSTS` and `FRONTEND_URL` accordingly
 
-Railway auto-deploys on push to main branch.
+## Scaling
 
-### Disable Auto-Deploy
+Railway automatically scales based on:
 
-Settings → Deploy → Auto Deploy: OFF
+- CPU usage
+- Memory usage
+- Request volume
 
-### Manual Deploy
+To configure scaling:
 
-```bash
-railway up
-```
+1. Go to service settings
+2. Adjust resources in "Settings" tab
 
-## 🚀 Next Steps
+## Security Checklist
 
-1. ✅ Set up custom domain
-2. ✅ Configure environment variables
-3. ✅ Run database migrations
-4. ✅ Test all endpoints
-5. ✅ Monitor logs for errors
-6. ✅ Set up error tracking (Sentry)
-7. ✅ Configure backup schedule
+- [ ] `SECRET_KEY` is unique and strong (64+ characters)
+- [ ] `ENV=production` is set
+- [ ] API docs disabled (`/docs` and `/redoc` not accessible)
+- [ ] HTTPS only (Railway provides SSL by default)
+- [ ] AWS credentials are secure and have minimal permissions
+- [ ] Rate limiting is enabled
+- [ ] CORS is properly configured
+- [ ] Database credentials are secure (managed by Railway)
 
-## 📚 Resources
+## Support
 
-- [Railway Docs](https://docs.railway.app)
-- [Railway CLI](https://docs.railway.app/develop/cli)
-- [Railway Templates](https://railway.app/templates)
+- Railway Docs: https://docs.railway.app
+- Railway Discord: https://discord.gg/railway
+- GitHub Issues: https://github.com/yourusername/codexa/issues

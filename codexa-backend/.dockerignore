@@ -16,42 +16,59 @@ htmlcov/
 # Git
 .git/
 .gitignore
+.gitattributes
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# OS
 .DS_Store
-Thumbs.db
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Documentation
+docs/
+*.md
+!README.md
+LICENSE
+
+# Tests
+tests/
+pytest.ini
+
+# CI/CD
+.github/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
 
 # Database
 *.db
 *.sqlite3
+pgvector/
 
 # Logs
 *.log
 logs/
 
-# Environment
-.env
-.env.*
+# Local storage
+local_storage/
 
-# Documentation (not needed for runtime)
-docs/
-*.md
-LICENSE
+# Deployment configs (not needed in image)
+railway.toml
+railway_deploy.md
+DEPLOYMENT_CHECKLIST.md
+docker-compose.yml
 
-# Tests (not needed for runtime)
-tests/
-pytest.ini
-
-# Scripts (keep only start.sh)
+# Scripts (keep start.sh)
 scripts/
+start_services.sh
 
-# Other
-*.tmp
-*.bak
-pgvector/
+# Frontend (if in same repo)
+frontend/
