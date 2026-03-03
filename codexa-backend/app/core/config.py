@@ -30,9 +30,12 @@ class Settings(BaseSettings):
     sentry_dsn: str | None = None
     
     # Database - Railway provides DATABASE_URL
-    database_url: str = Field(validation_alias=AliasChoices("DATABASE_URL", "DATABASE_PRIVATE_URL"))
+    database_url: str = Field(
+        default="postgresql://localhost/codexa",  # Temporary default for validation
+        validation_alias=AliasChoices("DATABASE_URL", "DATABASE_PRIVATE_URL")
+    )
     
-    s3_bucket: str
+    s3_bucket: str = Field(default="")  # Make optional temporarily
     s3_prefix: str = "prototype"
     aws_region: str = Field(
         default="us-east-1",
@@ -75,6 +78,18 @@ class Settings(BaseSettings):
         """Fix Railway's postgres:// to postgresql+psycopg2://"""
         if v.startswith("postgres://"):
             v = v.replace("postgres://", "postgresql+psycopg2://", 1)
+        return v
+    
+    @field_validator("s3_bucket")
+    @classmethod
+    def validate_s3_bucket(cls, v: str, info) -> str:
+        """Validate S3 bucket in production"""
+        env = info.data.get("env", "development")
+        if env == "production" and not v:
+            raise ValueError(
+                "S3_BUCKET is required in production! "
+                "Please set it in Railway dashboard under Variables tab."
+            )
         return v
     
     @field_validator("secret_key")
