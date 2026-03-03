@@ -27,26 +27,21 @@ if [ -z "$S3_BUCKET" ]; then
     exit 1
 fi
 
-# Run migrations if needed (handle failures gracefully)
+# Skip migrations by default to speed up startup
+# Set RUN_MIGRATIONS=true in Railway if you want them
 if [ "$RUN_MIGRATIONS" = "true" ]; then
     echo "Running database migrations..."
-    if alembic upgrade head; then
-        echo "✓ Migrations completed successfully"
-    else
-        echo "⚠ WARNING: Migrations failed, but continuing..."
-        echo "You may need to run migrations manually"
-    fi
+    alembic upgrade head || echo "⚠ Migrations failed, continuing..."
 fi
 
-echo "Starting uvicorn on port $PORT..."
+echo "Starting uvicorn on 0.0.0.0:$PORT..."
 
 # Convert LOG_LEVEL to lowercase for uvicorn
 LOG_LEVEL_LOWER=$(echo "${LOG_LEVEL:-info}" | tr '[:upper:]' '[:lower:]')
 
-# Start the application with more verbose logging
+# Start the application - ensure it binds to 0.0.0.0
 exec uvicorn app.main:app \
     --host 0.0.0.0 \
     --port $PORT \
     --log-level "$LOG_LEVEL_LOWER" \
-    --access-log \
-    --use-colors
+    --access-log
