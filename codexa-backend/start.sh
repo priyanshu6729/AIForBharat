@@ -27,18 +27,26 @@ if [ -z "$S3_BUCKET" ]; then
     exit 1
 fi
 
-# Run migrations if needed
+# Run migrations if needed (handle failures gracefully)
 if [ "$RUN_MIGRATIONS" = "true" ]; then
     echo "Running database migrations..."
-    alembic upgrade head
+    if alembic upgrade head; then
+        echo "✓ Migrations completed successfully"
+    else
+        echo "⚠ WARNING: Migrations failed, but continuing..."
+        echo "You may need to run migrations manually"
+    fi
 fi
 
 echo "Starting uvicorn on port $PORT..."
+
+# Convert LOG_LEVEL to lowercase for uvicorn
+LOG_LEVEL_LOWER=$(echo "${LOG_LEVEL:-info}" | tr '[:upper:]' '[:lower:]')
 
 # Start the application with more verbose logging
 exec uvicorn app.main:app \
     --host 0.0.0.0 \
     --port $PORT \
-    --log-level ${LOG_LEVEL:-info} \
+    --log-level "$LOG_LEVEL_LOWER" \
     --access-log \
     --use-colors
