@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Generator
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -146,6 +147,54 @@ class SocraticEngine:
                 "    return result"
             )
         return "Full solution: define the function, iterate inputs, update state, return result."
+
+    def generate_chat_fallback(self, question: str, code_context: str | None) -> str:
+        """
+        Local fallback for non-Socratic chat when Bedrock is unavailable.
+        Keeps tone direct and helpful.
+        """
+        question_clean = (question or "").strip()
+        if not question_clean:
+            question_clean = "Help me understand this code."
+
+        snippets: list[str] = [
+            "Here is a direct step-by-step explanation.",
+            f"Question: {question_clean}",
+        ]
+
+        if code_context and code_context.strip():
+            code_preview = code_context.strip().splitlines()
+            preview = "\n".join(code_preview[:12])
+            snippets.append("Code context observed:")
+            snippets.append(f"```\n{preview}\n```")
+            snippets.append(
+                "Quick approach:\n"
+                "1. Identify inputs, outputs, and side effects.\n"
+                "2. Walk line-by-line and track state changes.\n"
+                "3. Validate edge cases and error paths."
+            )
+        else:
+            snippets.append(
+                "Quick approach:\n"
+                "1. Define the exact goal and constraints.\n"
+                "2. Break the problem into small functions.\n"
+                "3. Validate with one simple and one edge-case input."
+            )
+
+        snippets.append(
+            "If you share the exact function or error, I can give a tighter step-by-step breakdown."
+        )
+        return "\n\n".join(snippets)
+
+    def stream_chat_fallback(
+        self, question: str, code_context: str | None
+    ) -> Generator[str, None, None]:
+        """Streaming local fallback for chat endpoint."""
+        response = self.generate_chat_fallback(question, code_context)
+        for paragraph in response.split("\n\n"):
+            text = paragraph.strip()
+            if text:
+                yield f"{text}\n\n"
 
 
 engine = SocraticEngine()

@@ -78,14 +78,18 @@ if settings.is_production:
         allowed_hosts=settings.allowed_hosts.split(",") + ["*.railway.app"]
     )
 
-# CORS Configuration
+# CORS Configuration - ALLOW LOCALHOST
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.allowed_origins,
+    allow_origins=[
+        "http://localhost:3000",           # Local development
+        "http://127.0.0.1:3000",           # Alternative localhost
+        "https://your-frontend.vercel.app", # Production frontend
+        "*"  # WARNING: Only use "*" for development
+    ],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allow_headers=["*"],
-    max_age=3600,
+    allow_methods=["*"],  # Allow all methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allow all headers
 )
 
 # Global exception handler

@@ -3,6 +3,7 @@ from pydantic import ConfigDict, Field, AliasChoices, field_validator
 import secrets
 import os
 
+
 class Settings(BaseSettings):
     model_config = ConfigDict(
         env_file=".env",
@@ -44,8 +45,24 @@ class Settings(BaseSettings):
     sqs_queue_url: str | None = None
     bedrock_region: str = Field(default="us-east-1", validation_alias=AliasChoices("BEDROCK_REGION", "AWS_REGION"))
     nova_model_id: str = Field(
-        default="amazon.nova-lite-v1",
+        default="amazon.nova-micro-v1:0",  # ✅ Valid model ID with version
         validation_alias=AliasChoices("NOVA_MODEL_ID", "BEDROCK_MODEL_ID"),
+    )
+    mentor_model_order: str = Field(
+        default="bedrock,local",
+        validation_alias=AliasChoices("MENTOR_MODEL_ORDER"),
+    )
+    mentor_bedrock_models: str = Field(
+        default="",
+        validation_alias=AliasChoices("MENTOR_BEDROCK_MODELS"),
+    )
+    mentor_stream_fallback_enabled: bool = Field(
+        default=True,
+        validation_alias=AliasChoices("MENTOR_STREAM_FALLBACK_ENABLED"),
+    )
+    mentor_local_chat_fallback_mode: str = Field(
+        default="heuristic",
+        validation_alias=AliasChoices("MENTOR_LOCAL_CHAT_FALLBACK_MODE"),
     )
     titan_embedding_model_id: str = Field(
         default="amazon.titan-embed-text-v1",
@@ -149,5 +166,21 @@ class Settings(BaseSettings):
         ])
         
         return origins
+
+    @property
+    def parsed_mentor_model_order(self) -> list[str]:
+        values = [value.strip().lower() for value in self.mentor_model_order.split(",") if value.strip()]
+        normalized: list[str] = []
+        for value in values:
+            if value in {"bedrock", "local"} and value not in normalized:
+                normalized.append(value)
+        return normalized or ["bedrock", "local"]
+
+    @property
+    def parsed_mentor_bedrock_models(self) -> list[str]:
+        values = [value.strip() for value in self.mentor_bedrock_models.split(",") if value.strip()]
+        if values:
+            return values
+        return [self.nova_model_id] if self.nova_model_id else []
 
 settings = Settings()

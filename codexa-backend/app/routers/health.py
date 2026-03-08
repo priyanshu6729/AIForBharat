@@ -17,7 +17,16 @@ def health():
 @router.get("/health/detailed")
 def health_detailed(db: Session = Depends(get_db)):
     """Detailed health check with dependency validation"""
-    checks = {"status": "healthy", "checks": {}}
+    checks = {
+        "status": "healthy",
+        "checks": {},
+        "mentor_models": {
+            "routing_order": settings.parsed_mentor_model_order,
+            "bedrock_models": settings.parsed_mentor_bedrock_models,
+            "stream_fallback_enabled": settings.mentor_stream_fallback_enabled,
+            "local_chat_fallback_mode": settings.mentor_local_chat_fallback_mode,
+        },
+    }
     
     # Database check
     try:
@@ -46,6 +55,19 @@ def health_detailed(db: Session = Depends(get_db)):
     except Exception as e:
         logger.error(f"Bedrock health check failed: {e}")
         checks["checks"]["bedrock"] = f"error: {str(e)}"
+        checks["status"] = "degraded"
+    
+    # AWS credentials + Bedrock check
+    try:
+        sts = boto3.client("sts", region_name=settings.aws_region)
+        identity = sts.get_caller_identity()
+        checks["checks"]["aws_credentials"] = "ok"
+        checks["checks"]["aws_account"] = identity.get("Account", "unknown")
+        checks["checks"]["bedrock"] = "ok"
+    except Exception as e:
+        logger.error(f"AWS credentials check failed: {e}")
+        checks["checks"]["aws_credentials"] = f"error: {str(e)}"
+        checks["checks"]["bedrock"] = "degraded - invalid credentials"
         checks["status"] = "degraded"
     
     if checks["status"] == "unhealthy":

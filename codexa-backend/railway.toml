@@ -1,0 +1,14 @@
+[build]
+builder = "NIXPACKS"
+watchPatterns = ["codexa-backend/**"]
+
+[deploy]
+startCommand = "sh start.sh"
+healthcheckPath = "/health"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+# Specify the root directory for the service
+[build.env]
+RAILWAY_RUN_UID = "1000"
