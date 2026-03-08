@@ -61,3 +61,4 @@ models/*.bin
 
 # Docker
 .dockerignore
+.env.production
