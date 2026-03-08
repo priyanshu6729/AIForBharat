@@ -12,6 +12,8 @@ from app.routes import auth
 from app.core.config import settings
 from sqlalchemy import text
 import logging
+import os
+print("DATABASE_URL FROM ENV:", os.getenv("DATABASE_URL"))
 
 configure_logging()
 logger = logging.getLogger(__name__)
@@ -84,7 +86,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",           # Local development
         "http://127.0.0.1:3000",           # Alternative localhost
-        "https://your-frontend.vercel.app", # Production frontend
+        "https://codexa-app.up.railway.app", # Production frontend
         "*"  # WARNING: Only use "*" for development
     ],
     allow_credentials=True,
