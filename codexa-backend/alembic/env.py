@@ -30,8 +30,10 @@ def get_url():
     return url
 
 
-# Override with environment variable
-config.set_main_option("sqlalchemy.url", get_url())
+# NOTE:
+# Avoid config.set_main_option("sqlalchemy.url", ...) because ConfigParser
+# interprets '%' characters in URL-encoded passwords (e.g. %40) as interpolation.
+# We pass DATABASE_URL directly in run_migrations_offline/online below.
 
 
 def run_migrations_offline():
