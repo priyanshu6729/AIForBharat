@@ -23,7 +23,11 @@ if config.config_file_name is not None:
 
 
 def get_url():
-    return os.getenv("DATABASE_URL", "postgresql+psycopg2://codexa:codexa@localhost:5432/codexa")
+    url = os.getenv("DATABASE_URL", "postgresql+psycopg2://codexa:codexa@localhost:5432/codexa")
+    # Railway can provide postgres://; SQLAlchemy expects postgresql+psycopg2://
+    if url.startswith("postgres://"):
+        url = url.replace("postgres://", "postgresql+psycopg2://", 1)
+    return url
 
 
 # Override with environment variable
