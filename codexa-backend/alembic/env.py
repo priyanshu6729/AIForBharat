@@ -4,7 +4,7 @@ import os
 import sys
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import create_engine, pool
 
 from alembic import context
 
@@ -50,11 +50,8 @@ def run_migrations_offline():
 
 
 def run_migrations_online():
-    configuration = config.get_section(config.config_ini_section)
-    configuration["sqlalchemy.url"] = get_url()
-    connectable = engine_from_config(
-        configuration,
-        prefix="sqlalchemy.",
+    connectable = create_engine(
+        get_url(),
         poolclass=pool.NullPool,
     )
 
